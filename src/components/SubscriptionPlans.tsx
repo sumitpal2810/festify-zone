@@ -1,63 +1,91 @@
 import { motion } from "framer-motion";
-import { Check, Zap, Crown, Rocket } from "lucide-react";
+import { Check, Tv, Monitor, Users, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const plans = [
   {
-    name: "Basic",
-    icon: Zap,
-    price: 0,
-    period: "Free forever",
-    description: "Perfect for casual event-goers",
+    name: "Mobile",
+    icon: Smartphone,
+    price: 4.99,
+    period: "/month",
+    description: "Watch on your phone or tablet",
     features: [
-      "Browse all events",
-      "Basic event search",
-      "Email notifications",
-      "Standard support",
+      "Unlimited event streaming",
+      "Watch on 1 device",
+      "720p video quality",
+      "Download on 1 device",
     ],
-    cta: "Get Started",
+    quality: "Good",
+    resolution: "720p",
+    devices: 1,
+    cta: "Start Free Trial",
     popular: false,
   },
   {
-    name: "Pro",
-    icon: Crown,
-    price: 19,
+    name: "Standard",
+    icon: Monitor,
+    price: 9.99,
     period: "/month",
-    description: "For regular attendees and enthusiasts",
+    description: "Great for personal viewing",
     features: [
-      "Everything in Basic",
-      "Priority ticket access",
-      "10% discount on all tickets",
-      "Early bird notifications",
-      "Event calendar sync",
-      "Priority support",
+      "Unlimited event streaming",
+      "Watch on 2 devices",
+      "1080p Full HD quality",
+      "Download on 2 devices",
+      "Ad-free experience",
     ],
-    cta: "Start Pro Trial",
+    quality: "Better",
+    resolution: "1080p",
+    devices: 2,
+    cta: "Start Free Trial",
     popular: true,
   },
   {
-    name: "Business",
-    icon: Rocket,
-    price: 49,
+    name: "Premium",
+    icon: Tv,
+    price: 14.99,
     period: "/month",
-    description: "For teams and organizations",
+    description: "Best for families",
     features: [
-      "Everything in Pro",
-      "Team management (up to 10)",
-      "20% discount on all tickets",
-      "Dedicated account manager",
-      "Custom event recommendations",
-      "Invoice & expense reports",
-      "API access",
+      "Unlimited event streaming",
+      "Watch on 4 devices",
+      "4K Ultra HD + HDR",
+      "Download on 6 devices",
+      "Ad-free experience",
+      "Spatial audio",
     ],
-    cta: "Contact Sales",
+    quality: "Best",
+    resolution: "4K+HDR",
+    devices: 4,
+    cta: "Start Free Trial",
+    popular: false,
+  },
+  {
+    name: "Family",
+    icon: Users,
+    price: 22.99,
+    period: "/month",
+    description: "Share with up to 6 people",
+    features: [
+      "Everything in Premium",
+      "6 individual profiles",
+      "Watch on 6 devices",
+      "Download on 10 devices",
+      "Parental controls",
+      "Group watch parties",
+      "Priority support",
+    ],
+    quality: "Best",
+    resolution: "4K+HDR",
+    devices: 6,
+    cta: "Start Free Trial",
     popular: false,
   },
 ];
 
 const SubscriptionPlans = () => {
   return (
-    <section id="pricing" className="py-20 bg-muted/50">
+    <section id="pricing" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -66,14 +94,14 @@ const SubscriptionPlans = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Choose Your Plan
+            Stream Events Live & On-Demand
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Unlock exclusive benefits and save on every event with our subscription plans
+            Choose your plan and start watching events from anywhere. All plans include a 7-day free trial.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -81,71 +109,91 @@ const SubscriptionPlans = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`relative bg-card rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-1 ${
+              className={`relative bg-card rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 ${
                 plan.popular
                   ? "border-primary shadow-glow"
-                  : "border-border hover:shadow-lg"
+                  : "border-border hover:shadow-lg hover:border-primary/50"
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1 bg-hero-gradient text-primary-foreground text-sm font-medium rounded-full">
+                <div className="absolute top-0 left-0 right-0 bg-hero-gradient py-1.5 text-center">
+                  <span className="text-primary-foreground text-sm font-semibold">
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <div className="text-center mb-6">
-                <div
-                  className={`w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 ${
-                    plan.popular ? "bg-hero-gradient" : "bg-muted"
-                  }`}
-                >
-                  <plan.icon
-                    className={`h-7 w-7 ${
-                      plan.popular ? "text-primary-foreground" : "text-primary"
+              <div className={`p-6 ${plan.popular ? "pt-10" : ""}`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                      plan.popular ? "bg-hero-gradient" : "bg-muted"
                     }`}
-                  />
+                  >
+                    <plan.icon
+                      className={`h-6 w-6 ${
+                        plan.popular ? "text-primary-foreground" : "text-primary"
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">
+                      {plan.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {plan.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-1">
-                  {plan.name}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {plan.description}
-                </p>
-                <div className="flex items-baseline justify-center gap-1">
-                  {plan.price > 0 && (
-                    <span className="text-2xl text-muted-foreground">$</span>
-                  )}
-                  <span className="text-5xl font-extrabold text-foreground">
-                    {plan.price === 0 ? "Free" : plan.price}
-                  </span>
-                  {plan.price > 0 && (
+
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-xl text-muted-foreground">$</span>
+                    <span className="text-4xl font-extrabold text-foreground">
+                      {plan.price}
+                    </span>
                     <span className="text-muted-foreground">{plan.period}</span>
-                  )}
+                  </div>
                 </div>
+
+                {/* Quality Badges */}
+                <div className="flex gap-2 mb-6">
+                  <span className="px-2 py-1 bg-muted rounded text-xs font-medium text-foreground">
+                    {plan.resolution}
+                  </span>
+                  <span className="px-2 py-1 bg-muted rounded text-xs font-medium text-foreground">
+                    {plan.devices} {plan.devices === 1 ? "device" : "devices"}
+                  </span>
+                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button
+                  className={`w-full ${plan.popular ? "shadow-glow" : ""}`}
+                  variant={plan.popular ? "default" : "outline"}
+                >
+                  {plan.cta}
+                </Button>
               </div>
-
-              <ul className="space-y-3 mb-6">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <div className="w-5 h-5 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-accent" />
-                    </div>
-                    <span className="text-sm text-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                className={`w-full ${plan.popular ? "shadow-glow" : ""}`}
-                variant={plan.popular ? "default" : "outline"}
-              >
-                {plan.cta}
-              </Button>
             </motion.div>
           ))}
         </div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-center text-sm text-muted-foreground mt-8"
+        >
+          Cancel anytime. No commitments, no contracts.
+        </motion.p>
       </div>
     </section>
   );

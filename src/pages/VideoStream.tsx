@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, Volume2, VolumeX, Maximize, Settings, MessageCircle, Users, Heart, Share2, ChevronLeft } from "lucide-react";
+import { Volume2, VolumeX, Maximize, Settings, MessageCircle, Users, Heart, Share2, ChevronLeft, Lock, Crown, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import ReactPlayer from "react-player";
 
 const relatedEvents = [
   {
@@ -49,9 +50,16 @@ const VideoStream = () => {
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState([80]);
-  const [progress, setProgress] = useState([35]);
+  const [volume, setVolume] = useState(0.8);
+  const [progress, setProgress] = useState(0);
   const [showChat, setShowChat] = useState(true);
+  
+  // Simulated subscription status - change to true to see video player
+  const [hasPlan] = useState(false);
+
+  const handleProgress = (state: { played: number }) => {
+    setProgress(state.played * 100);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,99 +81,142 @@ const VideoStream = () => {
               </Button>
             </div>
 
-            {/* Video Player */}
+            {/* Video Player / Subscription Required UI */}
             <div className="relative bg-black aspect-video mx-4 lg:mx-8 rounded-xl overflow-hidden group">
-              <img
-                src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=80"
-                alt="Stream"
-                className="w-full h-full object-cover"
-              />
-              
-              {/* Live Badge */}
-              <div className="absolute top-4 left-4 flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive rounded-lg">
-                  <div className="w-2 h-2 bg-destructive-foreground rounded-full animate-pulse" />
-                  <span className="text-sm font-semibold text-destructive-foreground">LIVE</span>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg">
-                  <Users className="h-4 w-4 text-foreground" />
-                  <span className="text-sm font-medium text-foreground">12,547 watching</span>
-                </div>
-              </div>
-
-              {/* Play/Pause Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="p-4 rounded-full bg-background/30 backdrop-blur-sm hover:bg-background/50 transition-all"
-                >
-                  {isPlaying ? (
-                    <Pause className="h-12 w-12 text-white" />
-                  ) : (
-                    <Play className="h-12 w-12 text-white" />
-                  )}
-                </button>
-              </div>
-
-              {/* Video Controls */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                {/* Progress Bar */}
-                <div className="mb-4">
-                  <Slider
-                    value={progress}
-                    onValueChange={setProgress}
-                    max={100}
-                    step={1}
-                    className="cursor-pointer"
+              {hasPlan ? (
+                <>
+                  <ReactPlayer
+                    url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    width="100%"
+                    height="100%"
+                    playing={isPlaying}
+                    muted={isMuted}
+                    volume={volume}
+                    onProgress={(state) => setProgress(state.played * 100)}
+                    controls={false}
                   />
-                </div>
+                  
+                  {/* Live Badge */}
+                  <div className="absolute top-4 left-4 flex items-center gap-3 z-10">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive rounded-lg">
+                      <div className="w-2 h-2 bg-destructive-foreground rounded-full animate-pulse" />
+                      <span className="text-sm font-semibold text-destructive-foreground">LIVE</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg">
+                      <Users className="h-4 w-4 text-foreground" />
+                      <span className="text-sm font-medium text-foreground">12,547 watching</span>
+                    </div>
+                  </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <button onClick={() => setIsPlaying(!isPlaying)}>
-                      {isPlaying ? (
-                        <Pause className="h-6 w-6 text-white" />
-                      ) : (
-                        <Play className="h-6 w-6 text-white" />
-                      )}
-                    </button>
-
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => setIsMuted(!isMuted)}>
-                        {isMuted ? (
-                          <VolumeX className="h-5 w-5 text-white" />
-                        ) : (
-                          <Volume2 className="h-5 w-5 text-white" />
-                        )}
-                      </button>
+                  {/* Video Controls */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    {/* Progress Bar */}
+                    <div className="mb-4">
                       <Slider
-                        value={isMuted ? [0] : volume}
-                        onValueChange={setVolume}
+                        value={[progress]}
                         max={100}
                         step={1}
-                        className="w-24"
+                        className="cursor-pointer"
                       />
                     </div>
 
-                    <span className="text-sm text-white">1:23:45</span>
-                  </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <button onClick={() => setIsPlaying(!isPlaying)}>
+                          {isPlaying ? (
+                            <span className="text-white text-xl">⏸</span>
+                          ) : (
+                            <span className="text-white text-xl">▶</span>
+                          )}
+                        </button>
 
-                  <div className="flex items-center gap-3">
-                    <button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-                      <Settings className="h-5 w-5 text-white" />
-                    </button>
-                    <button 
-                      className="p-2 hover:bg-white/20 rounded-lg transition-colors lg:hidden"
-                      onClick={() => setShowChat(!showChat)}
-                    >
-                      <MessageCircle className="h-5 w-5 text-white" />
-                    </button>
-                    <button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-                      <Maximize className="h-5 w-5 text-white" />
-                    </button>
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => setIsMuted(!isMuted)}>
+                            {isMuted ? (
+                              <VolumeX className="h-5 w-5 text-white" />
+                            ) : (
+                              <Volume2 className="h-5 w-5 text-white" />
+                            )}
+                          </button>
+                          <Slider
+                            value={[isMuted ? 0 : volume * 100]}
+                            onValueChange={(val) => setVolume(val[0] / 100)}
+                            max={100}
+                            step={1}
+                            className="w-24"
+                          />
+                        </div>
+
+                        <span className="text-sm text-white">1:23:45</span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                          <Settings className="h-5 w-5 text-white" />
+                        </button>
+                        <button 
+                          className="p-2 hover:bg-white/20 rounded-lg transition-colors lg:hidden"
+                          onClick={() => setShowChat(!showChat)}
+                        >
+                          <MessageCircle className="h-5 w-5 text-white" />
+                        </button>
+                        <button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                          <Maximize className="h-5 w-5 text-white" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
+                </>
+              ) : (
+                /* Subscription Required UI */
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-secondary via-secondary/95 to-secondary">
+                  <div 
+                    className="absolute inset-0 opacity-20"
+                    style={{
+                      backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=80')",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      filter: "blur(8px)"
+                    }}
+                  />
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="relative z-10 text-center px-6 py-10 max-w-md"
+                  >
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Lock className="h-10 w-10 text-primary" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+                      Premium Content
+                    </h2>
+                    <p className="text-muted-foreground mb-6">
+                      Subscribe to a plan to unlock unlimited access to live streams, exclusive events, and premium content.
+                    </p>
+                    <div className="space-y-3">
+                      <Button 
+                        size="lg" 
+                        className="w-full gap-2 shadow-glow"
+                        onClick={() => navigate("/#plans")}
+                      >
+                        <Crown className="h-5 w-5" />
+                        Subscribe Now
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="lg" 
+                        className="w-full"
+                        onClick={() => navigate("/auth")}
+                      >
+                        Sign In
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-4">
+                      Plans start from $9.99/month
+                    </p>
+                  </motion.div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Video Info */}

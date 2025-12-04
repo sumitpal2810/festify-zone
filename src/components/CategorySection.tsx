@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Monitor, Heart, Music, Building2, X, Calendar, MapPin, Users } from "lucide-react";
+import { Monitor, Heart, Music, Building2, X, Calendar, MapPin, Users, Ticket, Play, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   {
@@ -75,6 +76,7 @@ const categories = [
 ];
 
 const CategorySection = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const selected = categories.find((c) => c.id === selectedCategory);
@@ -98,18 +100,13 @@ const CategorySection = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {categories.map((category, index) => (
-            <motion.button
+            <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              onClick={() =>
-                setSelectedCategory(
-                  selectedCategory === category.id ? null : category.id
-                )
-              }
-              className={`group relative overflow-hidden rounded-2xl p-6 text-left transition-all duration-300 ${
+              className={`group relative overflow-hidden rounded-2xl text-left transition-all duration-300 ${
                 selectedCategory === category.id
                   ? "ring-2 ring-primary shadow-glow"
                   : "hover:shadow-lg"
@@ -121,7 +118,7 @@ const CategorySection = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/60 to-secondary/30" />
               
-              <div className="relative z-10">
+              <div className="relative z-10 p-6">
                 <div
                   className={`w-12 h-12 ${category.lightColor} rounded-xl flex items-center justify-center mb-4`}
                 >
@@ -133,11 +130,42 @@ const CategorySection = () => {
                 <p className="text-sm text-secondary-foreground/70 mb-3 line-clamp-2">
                   {category.description}
                 </p>
-                <span className="text-xs font-medium text-primary">
-                  {category.events} events →
+                <span className="text-xs font-medium text-primary mb-4 block">
+                  {category.events} events
                 </span>
+                
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2">
+                  <Button 
+                    size="sm" 
+                    className="w-full gap-2"
+                    onClick={() => setSelectedCategory(selectedCategory === category.id ? null : category.id)}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                    {selectedCategory === category.id ? "Hide Details" : "View Details"}
+                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1 gap-1 text-xs bg-background/20 border-secondary-foreground/20 text-secondary-foreground hover:bg-background/40"
+                    >
+                      <Ticket className="h-3 w-3" />
+                      Book
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1 gap-1 text-xs bg-background/20 border-secondary-foreground/20 text-secondary-foreground hover:bg-background/40"
+                      onClick={() => navigate("/stream")}
+                    >
+                      <Play className="h-3 w-3" />
+                      Watch
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </motion.button>
+            </motion.div>
           ))}
         </div>
 
@@ -227,9 +255,15 @@ const CategorySection = () => {
                       ))}
                     </div>
 
-                    <Button className="shadow-glow">
-                      View All {selected.name} Events
-                    </Button>
+                    <div className="flex flex-wrap gap-3">
+                      <Button className="shadow-glow">
+                        View All {selected.name} Events
+                      </Button>
+                      <Button variant="outline" className="gap-2" onClick={() => navigate("/stream")}>
+                        <Play className="h-4 w-4" />
+                        Watch Live Events
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

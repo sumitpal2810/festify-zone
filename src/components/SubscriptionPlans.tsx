@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Check, Tv, Monitor, Users, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -84,6 +85,8 @@ const plans = [
 ];
 
 const SubscriptionPlans = () => {
+  const navigate = useNavigate();
+  
   return (
     <section id="pricing" className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -178,6 +181,7 @@ const SubscriptionPlans = () => {
                 <Button
                   className={`w-full ${plan.popular ? "shadow-glow" : ""}`}
                   variant={plan.popular ? "default" : "outline"}
+                  onClick={() => navigate(`/subscribe?plan=${plan.name.toLowerCase()}`)}
                 >
                   {plan.cta}
                 </Button>

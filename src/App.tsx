@@ -7,6 +7,10 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import VideoStream from "./pages/VideoStream";
+import SubscriptionPurchase from "./pages/SubscriptionPurchase";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailed from "./pages/PaymentFailed";
+import PaymentHistory from "./pages/PaymentHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +26,10 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/account" element={<Account />} />
           <Route path="/stream" element={<VideoStream />} />
+          <Route path="/subscribe" element={<SubscriptionPurchase />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
+          <Route path="/payment-history" element={<PaymentHistory />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
